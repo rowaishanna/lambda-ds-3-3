@@ -3,7 +3,7 @@
 
 > If you haven't already, please sign up for a Heroku account and make sure you have the CLI set up!
 >  + https://signup.heroku.com/
->  + https://devcenter.heroku.com/articles/heroku-cli#download-and-install
+>  + https://devcenter.heroku.com/articles/getting-started-with-python#set-up
 
 Lambda Materials:
 
@@ -23,7 +23,7 @@ Heroku and the Heroku CLI:
   + https://heroku.com/
   + https://devcenter.heroku.com/articles/using-the-cli
   + https://github.com/prof-rossetti/intro-to-python/blob/master/notes/clis/heroku.md (BONUS)
-  + ["Delivery and Deployment" Slides](https://docs.google.com/presentation/d/1K83U0VjYob6dgdRodbidWBtFxK4Q_9h8zojzmto2wJY/edit#slide=id.g5846519fbe_0_2378) (BONUS)
+  + ["Delivery and Deployment" Slides](https://docs.google.com/presentation/d/1CPZXF_JO-zi6i6_OU7mGYvDJdqB3LBo7HF4bmyCbjMY/edit#slide=id.g5846519fbe_0_2378) (BONUS)
 
 Logging in to Heroku from the CLI (first time only):
 
@@ -149,8 +149,4 @@ heroku config:set TWITTER_ACCESS_TOKEN_SECRET="_____"
 heroku config
 ```
 
-## Part IV
 
-Optional updates to functionality and/or style.
-
-Optional student app demos.

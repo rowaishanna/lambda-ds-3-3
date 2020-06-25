@@ -17,7 +17,7 @@ Installing Package Dependencies:
 pipenv install scikit-learn
 ```
 
-## Part I - Admin Routes and Authentication
+## Part 0 - Admin Routes and Authentication (BONUS)
 
 Implementing admin routes to help us reset our database:
 
@@ -74,7 +74,7 @@ def reset_db():
 ```
 
 
-## Part II - Saving and Loading Pre-trained Models
+## Part I - Saving and Loading Pre-trained Models
 
   + https://docs.python.org/3/library/pickle.html
   
@@ -83,7 +83,7 @@ As you are working with your own predictive models (like the iris example below)
 > FYI: the purpose of the code below is not to train the best model, but rather to show an example of how to use a model
 
 ```py
-# web_app/classifier.py
+# web_app/iris_classifier.py
 
 import os
 import pickle
@@ -136,7 +136,7 @@ Integrating the model into our app (just an example):
 from flask import Blueprint, request, jsonify, render_template
 from sklearn.datasets import load_iris # just to have some data to use when predicting
 
-from web_app.classifier import load_model
+from web_app.iris_classifier import load_model
 
 stats_routes = Blueprint("stats_routes", __name__)
 
@@ -148,20 +148,20 @@ def iris():
     return str(result)
 ```
 
-What to do when a model file is too large for GitHub / Heroku? (BONUS):
+What to do when a model file is too large for GitHub / Heroku?
 
- + Ask the person who created the model to "reduce dimensionality" so the model file will be smaller, may require prediction accuracy trade-offs
- + Store the model remotely:
+ + A) Ask the person who created the model to "reduce dimensionality" so the model file will be smaller, may require prediction accuracy trade-offs
+ + B) Store the model remotely:
     + https://aws.amazon.com/s3/
     + https://console.cloud.google.com/storage/browser/brexitmeter-bucket/weights?authuser=1&project=brexitmeter
 
-## Part III - Training Models On the Fly
+## Part II - Training Models On the Fly
 
 Training our own model...
 
 > FYI: the purpose of the code below is not to train the best model, but rather to show an example of how to use a model
 
-> FYI: ideally, we'll pre-train our model and save it as a pickled file, and then load it from file in order to make predictions. However given the specific nature of this application and needing a separate model for each combination of two users, we'll do our model training "live"...
+> FYI: ideally, we'll pre-train our model and save it as a pickled file, and then load it from file in order to make predictions. However given we'll need a separate model for each combination of two users, and given the training time is negligible, we'll do our model training "live"...
 
 ```py
 # web_app/routes/stats_routes.py
@@ -186,54 +186,32 @@ def predict():
 
     print("-----------------")
     print("FETCHING TWEETS FROM THE DATABASE...")
-    # todo: wrap in a try block in case the user's don't exist in the database
-    user_a = User.query.filter(User.screen_name == screen_name_a).one()
-    user_b = User.query.filter(User.screen_name == screen_name_b).one()
-    user_a_tweets = user_a.tweets
-    user_b_tweets = user_b.tweets
-    #user_a_embeddings = [tweet.embedding for tweet in user_a_tweets]
-    #user_b_embeddings = [tweet.embedding for tweet in user_b_tweets]
-    print("USER A", user_a.screen_name, len(user_a.tweets))
-    print("USER B", user_b.screen_name, len(user_b.tweets))
+   
+    #TODO
 
     print("-----------------")
     print("TRAINING THE MODEL...")
-    embeddings = []
-    labels = []
-    for tweet in user_a_tweets:
-        labels.append(user_a.screen_name)
-        embeddings.append(tweet.embedding)
-
-    for tweet in user_b_tweets:
-        labels.append(user_b.screen_name)
-        embeddings.append(tweet.embedding)
-
-    classifier = LogisticRegression() # for example
-    classifier.fit(embeddings, labels)
+    
+    classifier = LogisticRegression()
+    # TODO: classifier.fit(___________, ___________)
 
     print("-----------------")
     print("MAKING A PREDICTION...")
-    #result_a = classifier.predict([user_a_tweets[0].embedding])
-    #result_b = classifier.predict([user_b_tweets[0].embedding])
 
-    basilica_api = basilica_api_client()
-    example_embedding = basilica_api.embed_sentence(tweet_text)
-    result = classifier.predict([example_embedding])
-    #breakpoint()
-
-    #return jsonify({"message": "RESULTS", "most_likely": result[0]})
+    # TODO
+    
     return render_template("results.html",
         screen_name_a=screen_name_a,
         screen_name_b=screen_name_b,
         tweet_text=tweet_text,
-        screen_name_most_likely= result[0]
+        screen_name_most_likely="TODO" 
     )
 ```
 
 > CHALLENGE: How can you improve the model's predictive accuracy? How many tweets from each user are being used to train the model, and is there parity there?
 
 ```html
-<!-- web_app/templates/results.html -->
+<!-- web_app/templates/prediction_results.html -->
 
 {% extends "layout.html" %}
 
@@ -248,7 +226,7 @@ def predict():
 ```
 
 ```html
-<!-- web_app/templates/results.html -->
+<!-- web_app/templates/prediction_form.html -->
 
 
 {% extends "layout.html" %}
@@ -260,6 +238,7 @@ def predict():
 
     <form action="/predict" method="POST">
 
+        <!-- TODO: Instead of hard-coding these drop-down menu options, dynamically populate them based on user records from the database -->
         <label>Twitter User A:</label>
         <select name="screen_name_a">
             <option value="elonmusk" selected="true">@elonmusk</option>
@@ -268,6 +247,7 @@ def predict():
         </select>
         <br>
 
+        <!-- TODO: Instead of hard-coding these drop-down menu options, dynamically populate them based on user records from the database -->
         <label>Twitter User B:</label>
         <select name="screen_name_b">
             <option value="elonmusk">@elonmusk</option>
